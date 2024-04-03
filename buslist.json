@@ -4,13 +4,21 @@
             "number": 3,
             "status": "Not Arrived",
             "change": null,
+<<<<<<< Updated upstream
             "timestamp": null
+=======
+            "timestamp": ""
+>>>>>>> Stashed changes
         },
         {
             "number": 4,
             "status": "Not Arrived",
             "change": null,
+<<<<<<< Updated upstream
             "timestamp": null
+=======
+            "timestamp": ""
+>>>>>>> Stashed changes
         },
         {
             "number": 11,
@@ -109,12 +117,15 @@
             "timestamp": null
         },
         {
+<<<<<<< Updated upstream
             "number": 66,
             "status": "Not Arrived",
             "change": null,
             "timestamp": null
         },
         {
+=======
+>>>>>>> Stashed changes
             "number": 71,
             "status": "Not Arrived",
             "change": null,

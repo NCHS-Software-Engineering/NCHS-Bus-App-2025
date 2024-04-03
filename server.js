@@ -61,11 +61,6 @@ function reset(condition) {
 reset(false);
 setInterval(reset, 1000 * 60 * 60, false);
 
-app.get("/reset", (req, res) => {
-  reset(true);
-  res.render("pages/buslist");
-});
-
 //let busNum = Number(req.body.busnum);
 
 var time;
@@ -108,6 +103,12 @@ function verifyToken(req, res) {
   }
   return false;
 }
+
+//will need to fix later
+app.get("/reset", (req, res) => {
+    reset(true);
+    res.render("pages/buslist");
+});
 
 app.get("/buslist", function (req, res) {
   if (verifyToken(req, res)) {
@@ -252,9 +253,9 @@ app.post("/delbus", (req, res) => {
       fullList.buslist.push(buslist.buslist[i]);
     }
 
-    for (i = 0; i < fullList.buslist.length; i++) {
+    for (i = fullList.buslist.length - 1; i>= 0; i--) {
       if (fullList.buslist[i].number == req.body.busnum)
-        fullList.buslist.splice(i, i + 1);
+        fullList.buslist.splice(i, 1);
     }
 
     let final = JSON.stringify(fullList);
@@ -264,8 +265,39 @@ app.post("/delbus", (req, res) => {
   res.redirect("settings");
 });
 app.get('/login', (req, res) => {
-    res.render('pages/login');
-})
+  if (verifyToken(req, res)) 
+    res.render("pages/buslist");
+  else res.render('pages/login');
+});
+app.post("/login-auth", (req, res) => {
+  // username is anything on the whitelist
+  // the password will be:
+  // #admin#dateandtime#
+  // dateandtime is formatted (with no extra 0s): day month year 24-hour+6-hours minute
+  const date = new Date();
+  let day = date.getDate();
+  let month = date.getMonth()+1;
+  let year = date.getFullYear();
+  let time = date.getHours()+""+date.getMinutes();
+  const pass = "#admin#"+day+""+month+""+year+""+time+"#";
+
+  let redirected = false;
+  let username = req.body.username;
+  let password = req.body.password;
+  var shasum = crypto.createHash('sha1')
+
+  let whitelist = JSON.parse(fs.readFileSync("whitelist.json", "utf-8")).users;
+  for (i = 0; i < whitelist.length; i++) {
+    if (whitelist[i].toLowerCase() == username.toLowerCase() && pass == password){
+      res.cookie('c_email', username, {maxAge: 3600000, httpOnly: true});
+      shasum.update(username);
+      res.cookie('c_token', shasum.digest('hex'), { maxAge: 3600000, httpOnly: true });
+      redirected = true;
+      res.redirect('/buslist');
+    }
+  }
+  if (!redirected) res.redirect('/login');
+});
 app.get("/logout", (req, res) => {
   res.clearCookie('c_email');
   res.clearCookie('c_token');
@@ -280,12 +312,31 @@ app.post("/updateStatus", (req, res) => {
   fs.readFile("buslist.json", "utf-8", (err, jsonString) => {
     let buslist = JSON.parse(jsonString);
 
+<<<<<<< Updated upstream
         for (i = 0; i < buslist.buslist.length; i++) {
             if (buslist.buslist[i].number == bus.number || buslist.buslist[i].change == bus.number || buslist.buslist[i].number == bus.change || buslist.buslist[i].change == bus.change) {
                 buslist.buslist[i].status = bus.newStatus;
                 buslist.buslist[i].timestamp = time;
             }
         };
+=======
+    updatingbus = bus.number;
+      if(bus.change != 0){
+        updatingbus = bus.change
+      }
+
+    for (i = 0; i < buslist.buslist.length; i++) {
+      iteratedbus = buslist.buslist[i].number;
+      if (buslist.buslist[i].change != null){
+          iteratedbus = buslist.buslist[i].change;
+      }
+      
+      if (updatingbus == iteratedbus){
+        buslist.buslist[i].status = bus.newStatus;
+        buslist.buslist[i].timestamp = time;
+      }
+    };
+>>>>>>> Stashed changes
 
     let final = JSON.stringify(buslist);
 
@@ -302,12 +353,22 @@ app.post("/updateStatusTime", (req, res) => {
   fs.readFile("buslist.json", "utf-8", (err, jsonString) => {
     let buslist = JSON.parse(jsonString);
 
-        for (i = 0; i < buslist.buslist.length; i++) {
-            if (buslist.buslist[i].number == bus.number || buslist.buslist[i].change == bus.number || buslist.buslist[i].number == bus.change || buslist.buslist[i].change == bus.change) {
-                buslist.buslist[i].status = bus.newStatus;
-                buslist.buslist[i].timestamp = "";
-            }
-        };
+    updatingbus = bus.number;
+    if(bus.change != 0){
+      updatingbus = bus.change
+    }
+
+  for (i = 0; i < buslist.buslist.length; i++) {
+    iteratedbus = buslist.buslist[i].number;
+    if (buslist.buslist[i].change != null){
+        iteratedbus = buslist.buslist[i].change;
+    }
+    
+    if (updatingbus == iteratedbus){
+      buslist.buslist[i].status = bus.newStatus;
+      buslist.buslist[i].timestamp = "";
+    }
+  }
 
     let final = JSON.stringify(buslist);
 
