@@ -312,14 +312,6 @@ app.post("/updateStatus", (req, res) => {
   fs.readFile("buslist.json", "utf-8", (err, jsonString) => {
     let buslist = JSON.parse(jsonString);
 
-<<<<<<< Updated upstream
-        for (i = 0; i < buslist.buslist.length; i++) {
-            if (buslist.buslist[i].number == bus.number || buslist.buslist[i].change == bus.number || buslist.buslist[i].number == bus.change || buslist.buslist[i].change == bus.change) {
-                buslist.buslist[i].status = bus.newStatus;
-                buslist.buslist[i].timestamp = time;
-            }
-        };
-=======
     updatingbus = bus.number;
       if(bus.change != 0){
         updatingbus = bus.change
@@ -336,7 +328,6 @@ app.post("/updateStatus", (req, res) => {
         buslist.buslist[i].timestamp = time;
       }
     };
->>>>>>> Stashed changes
 
     let final = JSON.stringify(buslist);
 
