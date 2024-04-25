@@ -191,7 +191,10 @@
                 const starredBussesArray = Array.from(starredBusses);
                 const starredBussesString = JSON.stringify(starredBussesArray);
                 // Set the cookie with the name 'starredBusses' and the value as the stringified array
-                document.cookie = `starredBusses=${starredBussesString}`;
+                // NEW CHNAGE -- not in ORIGINAL STARRED BUSSES
+                const expirationDate = new Date();
+                expirationDate.setFullYear(expirationDate.getFullYear() + 10); // 10 years from now
+                document.cookie = `starredBusses=${starredBussesString}; expires=${expirationDate.toUTCString()}`;
                 console.log('starredBusses cookie value:', starredBussesString);
             }
             
