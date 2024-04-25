@@ -148,6 +148,17 @@
 
 
         <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                console.log("THIS I S NOT WEORIIN");
+                // Check if cookies exist
+                const starredBussesString = getCookie('starredBusses');
+                if (starredBussesString) {
+                    // Parse the cookie value to get the starredBusses array
+                    starredBusses = new Set(JSON.parse(starredBussesString));
+                    // Update UI to reflect starred items
+                    updateStarredUI();
+                }
+            });
 
             const starredBusses = new Set([]);
             var lowestBus = 0;
@@ -160,16 +171,11 @@
             var tabelElement = table.rows.cells[0]
             var tableValue = parseInt(tableElement.textContent.trim(), 10);
             console.log(tabelValue)
-            window.addEventListener('load', function() {
-                // Check if cookies exist
-                const starredBussesString = getCookie('starredBusses');
-                if (starredBussesString) {
-                    // Parse the cookie value to get the starredBusses array
-                    starredBusses = new Set(JSON.parse(starredBussesString));
-                    // Update UI to reflect starred items
-                    updateStarredUI();
-                }
-            });
+
+           
+
+
+         
             
             function getCookie(name) {
                 const cookieString = document.cookie;
