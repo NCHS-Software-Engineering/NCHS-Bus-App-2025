@@ -10,6 +10,10 @@
 
         <!-- Latest compiled JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        '
+
+        <link href="https://cdn.syncfusion.com/ej2/22.1.34/ej2-icons/styles/bootstrap5.css" rel="stylesheet"/>
+        <link href="https://cdn.syncfusion.com/ej2/22.1.34/ej2-icons/styles/material.css" rel="stylesheet"/>
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -18,6 +22,7 @@
         
 
         <style>
+            @import "../node_modules/@syncfusion/ej2-icons/material.css";
             html {
                 height: 100%;
             }          
@@ -48,6 +53,15 @@
                 margin-bottom: 15px;
             
                 
+            }
+            .e-star-filled{
+                border: 1px solid;
+                color: black;
+            
+            }
+
+            .e-star-filled:hover{
+                background-color: yellow;            
             }
                 /*
             table.PerformanceTable {
@@ -134,63 +148,177 @@
 
 
         <script>
-            function makeTable() {
-            fetch('/getbus')
-            .then(response => { 
-                if(response.ok) {
-                    return response.json(); // not important
+
+            const starredBusses = new Set([]);
+            var lowestBus = 0;
+            var factor = 10000;
+            var highestBus = 0;
+            
+            
+            let table = document.getElementById('busTable');
+            
+            var tabelElement = table.rows.cells[0]
+            var tableValue = parseInt(tableElement.textContent.trim(), 10);
+            console.log(tabelValue)
+            window.addEventListener('load', function() {
+                // Check if cookies exist
+                const starredBussesString = getCookie('starredBusses');
+                if (starredBussesString) {
+                    // Parse the cookie value to get the starredBusses array
+                    starredBusses = new Set(JSON.parse(starredBussesString));
+                    // Update UI to reflect starred items
+                    updateStarredUI();
                 }
-            }).then(data => {
-                if(data) { // if there is data
-                    let i = 0;
-                    let busses = data.buslist;
-                    let table = document.getElementById('busTable');
-                    while(i < busses.length) { // busses[i]
-                        let row = table.insertRow(-1);
+            });
+            
+            function getCookie(name) {
+                const cookieString = document.cookie;
+                const cookies = cookieString.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Check if this cookie contains the name we're looking for
+                    if (cookie.startsWith(name + '=')) {
+                        // If it does, return the cookie value
+                        return cookie.substring(name.length + 1);
+                    }
+                }
+                // If the cookie with the specified name is not found, return null
+                return null;
+            }
+            
+            function updateCookie() {
+                // Convert starredBusses set to an array and then to a string
+                const starredBussesArray = Array.from(starredBusses);
+                const starredBussesString = JSON.stringify(starredBussesArray);
+                // Set the cookie with the name 'starredBusses' and the value as the stringified array
+                document.cookie = `starredBusses=${starredBussesString}`;
+                console.log('starredBusses cookie value:', starredBussesString);
+            }
+            
+            function updateStarredUI() {
+                const starredButtons = document.querySelectorAll('.starring');
+                starredButtons.forEach(button => {
+                    const row = button.closest('tr');
+                    const busId = parseInt(row.cells[0].textContent.trim(), 10);
+                    if (starredBusses.has(busId)) {
+                        button.style.backgroundColor = 'yellow';
+                        button.style.border = '2px solid black';
+                    } else {
+                        button.style.backgroundColor = 'white';
+                        button.style.border = '1px solid black';
+                    }
+                });
+            }
+            
+            
+                        function makeTable() {
+            
+                            var table = document.createElement('table');
+                            table.setAttribute('id', 'myTable'); // Set an ID for the table
+                        fetch('/getbus')
+                        .then(response => { 
+                            if(response.ok) {
+                                return response.json(); // not important
+                            }
+                        }).then(data => {
+                            if(data) { // if there is data
+                                let i = 0;
+            
                         
-                        row.insertCell(0).innerHTML = busses[i].number;
-                        row.insertCell(1).innerHTML = busses[i].change;
-                        row.insertCell(2).innerHTML = busses[i].status;
-                        row.insertCell(3).innerHTML = busses[i].timestamp;
-                        i++;
+                                let busses = data.buslist;
+                                let table = document.getElementById('busTable');
+                                let item = document.getElementById('star-selector');
+                                
+            
+                                
+            
+                                while(i < busses.length) { // busses[i]
+                                    let row = table.insertRow(-1);
+                                 
+                                    row.insertCell(0).innerHTML = busses[i].number;
+                                    row.insertCell(1).innerHTML = busses[i].change;
+                                    row.insertCell(2).innerHTML = busses[i].status;
+                                    row.insertCell(3).innerHTML = busses[i].timestamp;
+                                    row.insertCell(4).innerHTML = "<span id = 'star-selector' class='e-icons e-medium e-star-filled starring'></span>";
+                                    
+            
+            
+            
+                                   
+            
+            
+                                    row.addEventListener('click', function(event){
+            
+                                        starred();
+                                    });
+            
+            
+                                    i++;
+            
+            
+                               
+                                    
+                                }
+            
+                                
+                            }
+                        });
+            
+                        
                     }
-
+            
+                   
+            
+                        function fetchBusses() {
+                        fetch('/getbus')
+                        .then(response => { 
+                            if(response.ok) {
+                                return response.json(); // not important
+                            }
+                        }).then(data => {
+                            if(data) { // if there is data
+                                let i = 1;
+                                let busses = data.buslist;
+                                let table = document.getElementById('busTable');
+                                let item = document.getElementById('star-selector');
+                                
+            
+                                while(i < busses.length) { // busses[i]
+                                    
+                                    let row = table.rows[i];
+                                    row.cells[0].innerHTML = busses[i-1].number;
+                                    row.cells[1].innerHTML = busses[i-1].change;
+                                    row.cells[2].innerHTML = busses[i-1].status;
+                                    row.cells[3].innerHTML = busses[i-1].timestamp;
+                                    
+                                    
+                                    
+                                    if(starredBusses.has(tableValue)){
+                                        starredBusses.delete(tableValue);
+                                        starred();
+            
+                                    }
                     
-                }
-            });
-        }
-
-            function fetchBusses() {
-            fetch('/getbus')
-            .then(response => { 
-                if(response.ok) {
-                    return response.json(); // not important
-                }
-            }).then(data => {
-                if(data) { // if there is data
-                    let i = 1;
-                    let busses = data.buslist;
-                    let table = document.getElementById('busTable');
-                    while(i < busses.length) { // busses[i]
-                        let row = table.rows[i];
-                        row.cells[0].innerHTML = busses[i-1].number;
-                        row.cells[1].innerHTML = busses[i-1].change;
-                        row.cells[2].innerHTML = busses[i-1].status;
-                        row.cells[3].innerHTML = busses[i-1].timestamp;
-                        i++;
+            
+                                      
+                                    i++;
+                                }
+                                item.classList.add('starred-factor');
+             
+                                      
+                                
+                                
+                            }
+                        });
                     }
-                    
-                    
-                }
-            });
-        }
-        </script> 
+                    </script> 
         <table id="busTable">
             <tr>
                 <th>Bus Number</th> 
                 <th>Bus Changes</th>
                 <th>Current Status</th>
                 <th>Time</th>
+                <th></th>
             </tr>
 
         </table>
@@ -199,6 +327,115 @@
         <script>
             makeTable();
             setInterval(fetchBusses, 15000);
+            var smallestBus = 0;
+            
+
+
+
+            function starred(){ //add isStarred
+                findSmallest();
+                findHighest();
+                const buttons = document.querySelectorAll('.starring');
+                const clickedButton = event.target;
+                const row = clickedButton.parentNode.parentNode; // Get the row associated with the clicked button
+                var initelement = row.cells[0]
+                var intValue = parseInt(initelement.textContent.trim(), 10);
+                const table = row.parentNode; // Get the table element
+
+
+
+                
+
+
+
+                if(!(starredBusses.has(intValue))){
+                    starredBusses.add(intValue);
+                    updateCookie();
+                    const row1 = clickedButton.parentNode.parentNode; // Get the row associated with the clicked button
+                    var element = row1.cells[4].querySelector('span.starring');
+                    
+                    element.style.backgroundColor = 'yellow';
+                    element.style.border = '2px solid black';
+                    
+                    table.insertBefore(row, table.firstChild.nextSibling);
+                }else {
+
+                    let check = false;
+                    let v = 0;
+                    
+                    while(!check && v< table.rows.length) { // busses[i]{
+                        
+                        if(table.rows[v] == null){
+                            var initelement1 = null;
+                        }else{
+                            let rowint = table.rows[v]; 
+                            var initelement1 = rowint.cells[0];
+                            var intValue1 = parseInt(initelement1.textContent.trim(), 10);
+                        }
+                    
+                        
+                    
+
+                        
+                        
+                        
+
+                        if(intValue === smallestBus){
+                            check = true;
+                        }else if(intValue === highestBus){
+                            check = true;
+                        }else if(!(starredBusses.has(intValue1))){
+                            let rowint1 = table.rows[v+1]; 
+                            var initelement2 = rowint1.cells[0];
+                            var intValue2 = parseInt(initelement2.textContent.trim(), 10);
+
+                            if(intValue1 < intValue && intValue < intValue2){
+                                check = true;
+                                console.log(intValue1);
+                            }
+                            
+                        }
+                        v++;
+
+                    }
+
+
+
+                    const rowReference = table.rows[v];
+                    console.log(rowReference)
+                    
+
+
+                    starredBusses.delete(intValue)
+                    updateCookie();
+                    console.log()
+                    //table.insertBefore(row, rowReference.nextSibling);
+            
+                    if(intValue == highestBus){
+                        table.appendChild(row);
+                    }else{
+                        rowReference.insertAdjacentElement('beforebegin', row);
+
+                    }
+
+
+                    const row1 = clickedButton.parentNode.parentNode; // Get the row associated with the clicked button
+                    
+                    var element = row1.cells[4].querySelector('span.starring');
+                    
+                    element.style.backgroundColor = 'white';
+                    element.style.border = '1px solid black';
+
+                // console.log(location.reload())
+                    //location.reload();
+
+
+
+
+            
+        }
+            }
+        
             
             
             function getRandomInt(max) {
@@ -222,6 +459,49 @@
                     }
                 })
             }
+
+
+            function findSmallest() {
+                fetch('/getbus')
+                .then(response => { 
+                    if(response.ok) {
+                        return response.json(); // not important
+                    }
+                    }).then(data => {
+                    if(data) { // if there is data
+                        smallestBus = data.buslist[0].number;
+                        console.log(smallestBus)
+                
+                    }
+                }).catch(err => console.error(err));
+            }
+
+            function findHighest() {
+                fetch('/getbus')
+                .then(response => { 
+                    if(response.ok) {
+                        return response.json(); // not important
+                    }
+                    }).then(data => {
+                    if(data) { // if there is data
+                        var num = 0;
+                        var i =0;
+                        while(i<data.buslist.length){
+                            if(data.buslist[i].number > num){
+                                highestBus = data.buslist[i].number;
+                            }
+                            i++;
+                        }
+                
+                    }
+                }).catch(err => console.error(err));
+            }
+
+
+           // document.addEventListener('DOMContentLoaded', function() {
+
+//starred();
+
         </script>
         <!-- Google sign in script-->
         <script src="https://accounts.google.com/gsi/client" async defer></script>
