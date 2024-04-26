@@ -165,7 +165,12 @@
             var factor = 10000;
             var highestBus = 0;
             
-        
+            
+            let table = document.getElementById('busTable');
+            
+            var tabelElement = table.rows.cells[0]
+            var tableValue = parseInt(tableElement.textContent.trim(), 10);
+            console.log(tabelValue)
 
            
 
@@ -195,7 +200,7 @@
                 // NEW CHNAGE -- not in ORIGINAL STARRED BUSSES
                 const expirationDate = new Date();
                 expirationDate.setFullYear(expirationDate.getFullYear() + 10); // 10 years from now
-                document.cookie = `starredBusses=${starredBussesString}; expires=${expirationDate.toUTCString()}`;
+                document.cookie = `starredBusses=${starredBussesString}; expires=${expirationDate.toUTCString()}; SameSite=None; Secure`;
                 console.log('starredBusses cookie value:', starredBussesString);
             }
             
