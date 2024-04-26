@@ -200,7 +200,7 @@
                 // NEW CHNAGE -- not in ORIGINAL STARRED BUSSES
                 const expirationDate = new Date();
                 expirationDate.setFullYear(expirationDate.getFullYear() + 10); // 10 years from now
-                document.cookie = `starredBusses=${starredBussesString}; expires=${expirationDate.toUTCString()}; SameSite=None; Secure`;
+                document.cookie = `starredBusses=${starredBussesString}; expires=${expirationDate.toUTCString()}; SameSite=None; Secure; domain=https://bus-dev.redhawks.us/`;
                 console.log('starredBusses cookie value:', starredBussesString);
             }
             
