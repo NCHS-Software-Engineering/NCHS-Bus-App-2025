@@ -80,6 +80,7 @@
     <body>
 
         <button id="subscribe-button">Subscribe to Push Notifications</button>
+        <button id="send-notif_button">Send a test notification</button>
 
         <script>
 
@@ -117,6 +118,44 @@
 
                 console.log('Subscribed to Push Notification...');
             }
+
+            document.getElementById("send-notif_button").addEventListener('click', function(){
+                sendNotif();
+            });
+
+            async function sendNotif(){
+                console.log("sending push notif");
+
+                const AWS = require('aws-sdk');
+
+                AWS.config.update({
+                region: 'us-east-1',
+                accessKeyId: process.env.ACCESS_KEY,
+                secretAccessKey: process.env.SECRET_KEY
+                });
+
+                const sns = new AWS.SNS({ apiVersion: '2010-03-31' });
+
+                const params = {
+                    TopicArn: 'arn:aws:sns:us-east-1:370820922438:Bus-App-Test',
+                    Message: 'This is a test notif from sns topic please work im begging',
+                    Subject: 'Your notification subject', // Optional
+                    /* MessageAttributes: {
+                        'customKey': { DataType: 'String', StringValue: 'customValue' } // Optional message attributes
+                    } */
+                    };
+
+                sns.publish(params, (err, data) => {
+                if (err) {
+                    console.error('Failed to publish message to SNS:', err);
+                } else {
+                    console.log('Message published successfully:', data.MessageId);
+                }
+                });
+
+            }
+
+
         </script>
 
         <nav id="navbar" class="navbar navbar-expand navbar-dark" style="box-shadow: 0px 0px 20px rgb(18, 18, 18); background-color: rgb(220, 53, 69);">

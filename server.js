@@ -480,6 +480,7 @@ const sns = new AWS.SNS({ apiVersion: '2010-03-31' });
 const topicArn = 'arn:aws:sns:us-east-1:370820922438:Bus-App-Test';
 const webpush = require('web-push');
 
+
 //will prob have to put vapid key details in env later lol
 const publicVapidKey = 'BF7vkSzqQLlmZSSI1copZIdvNoAPhXotl7XOme8IrD09mzWgHIfUJscwr1WI-OcKGO8Z0raotu7MRoRMX_0bUN0';
 const privateVapidKey = 'GSyPCjTTt56uMMWTFz20-9KG3uSEucdOtXmT-WfvbtM';
