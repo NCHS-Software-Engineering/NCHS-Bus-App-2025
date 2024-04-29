@@ -517,3 +517,25 @@ app.post('/subscribe', (req, res) => {
   // Pass object into sendNotification
   webpush.sendNotification(subscription, payload).catch(err => console.error(err));
 });
+
+
+app.post('/send-notification',(req,res)=>{
+  const params = {
+    TopicArn: 'arn:aws:sns:us-east-1:370820922438:Bus-App-Test',
+    Message: 'This is a test notif from sns topic please work im begging',
+    Subject: 'Your notification subject', // Optional
+    /* MessageAttributes: {
+        'customKey': { DataType: 'String', StringValue: 'customValue' } // Optional message attributes
+    } */
+    };
+
+  sns.publish(params, (err, data) => {
+  if (err) {
+      console.error('Failed to publish message to SNS:', err);
+  } else {
+      console.log('Message published successfully:', data.MessageId);
+  }
+  });
+
+
+});
