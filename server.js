@@ -286,7 +286,7 @@ app.post("/addbus", (req, res) => {
     for (i = 0; i < buslist.buslist.length; i++) {
       fullList.buslist.push(buslist.buslist[i]);
     }
-
+    
     fullList.buslist.push(newBusObj);
 
     fullList.buslist = fullList.buslist.sort((a, b) => {

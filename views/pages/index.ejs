@@ -189,16 +189,129 @@
 
         <script>
               document.addEventListener('DOMContentLoaded', function() {
-                console.log("THIS I S NOT WEORIIN");
+                
                 // Check if cookies exist
                 const starredBussesString = getCookie('starredBusses');
-                if (starredBussesString) {
-                    // Parse the cookie value to get the starredBusses array
-                    starredBusses = new Set(JSON.parse(starredBussesString));
-                    // Update UI to reflect starred items
-                    updateStarredUI();
-                }
-            });
+                console.log(starredBusses);
+            let starredBussesArray = [] ;
+            if(starredBussesString != undefined){
+                starredBussesArray=   JSON.parse(starredBussesString)
+            }
+
+
+
+         
+                        fetch('/getbus')
+                        .then(response => { 
+                            if(response.ok) {
+                                return response.json(); // not important
+                            }
+                        }).then(data => {
+                            if(data) {
+                                
+                             makeTable()
+                                let i = 1;
+                                let busses = data.buslist;
+                                let table = document.getElementById('busTable');
+                                let item = document.getElementById('star-selector');
+                            table.setAttribute('id', 'myTable'); // Set an ID for the table
+                                console.log(busses.length)
+                                for(var v = starredBussesArray.length - 1; v>=0; v--){
+                          while(i < busses.length) { // busses[i]
+                            let row = table.rows[i];
+                                    var initelement = row.cells[0]
+                                    var intValue = parseInt(initelement.textContent.trim(), 10);
+
+                                    if(intValue == starredBussesArray[v]){
+                                        starredBusses.add(starredBussesArray[v])
+                                        starredBussesArray.pop();
+
+                                        var element = row.cells[4].querySelector('span.starring');
+                                        
+                                        element.style.backgroundColor = 'yellow';
+                                        element.style.border = '2px solid black';
+                                        
+                                        table.insertBefore(row, table.firstChild.nextSibling);
+
+
+                                    }
+                                    i++;
+                            }
+                                }
+
+
+                            }});
+              
+                           
+            
+
+            
+
+          /*  for(var v = starredBussesArray.length - 1; v>=0; v--){
+
+                starredBusses.add(starredBussesArray[v]);
+                const busRows = document.querySelectorAll('bus-table tr:not(:first-child)'); // Exclude the first row (header)
+                console.log(busRows)
+                busRows.forEach(row => {
+                    const busNumber = parseInt(row.cells[0].textContent.trim()); // Assuming bus number is in the first cell
+                    console.log(busNumber)
+                    const starringButton = row.querySelector('.starring'); // Assuming each row has a starring button
+                    // Check if the bus is starred
+                    if (starredBussesArray.includes(busNumber)) {
+                        // Apply starred styles to the button
+                        starringButton.style.backgroundColor = 'yellow';
+                        starringButton.style.border = '2px solid black';
+                        console.log(starringButton.style.border)
+                    } else {
+                        // Apply unstarred styles to the button
+                        starringButton.style.backgroundColor = 'white';
+                        starringButton.style.border = '1px solid black';
+                    }
+                });*/
+     
+                                   /* let i = 0;
+            
+                        
+                                let busses = data.buslist;
+                                let table = document.getElementById('busTable');
+                                let item = document.getElementById('star-selector');
+            
+
+
+
+                                while(i < busses.length) {
+                                    let row = table.rows[i];
+                                    var initelement = row.cells[0]
+                                    var intValue = parseInt(initelement.textContent.trim(), 10);
+
+                                    if(intValue == starredBussesArray[v]){
+                                        starredBusses.add(starredBussesArray[v])
+                                        starredBussesArray.pop();
+
+                                        var element = row.cells[4].querySelector('span.starring');
+                                        
+                                        element.style.backgroundColor = 'yellow';
+                                        element.style.border = '2px solid black';
+                                        
+                                        table.insertBefore(row, table.firstChild.nextSibling);
+
+
+                                    }
+                                }*/
+
+
+
+
+                           // }
+                     
+
+
+
+                
+
+            
+            
+    });
 
             var starredBusses = new Set([]);
             var lowestBus = 0;
@@ -212,7 +325,7 @@
             var tableValue = parseInt(tableElement.textContent.trim(), 10);
             console.log(tabelValue)
 
-           
+            
 
 
          
@@ -240,24 +353,73 @@
                 // NEW CHNAGE -- not in ORIGINAL STARRED BUSSES
                 const expirationDate = new Date();
                 expirationDate.setFullYear(expirationDate.getFullYear() + 10); // 10 years from now
-                document.cookie = `starredBusses=${starredBussesString}; expires=${expirationDate.toUTCString()}; SameSite=None; Secure; domain=https://bus-dev.redhawks.us/`;
+
+                //for local host below
+                document.cookie = `starredBusses=${starredBussesString}; expires=${expirationDate.toUTCString()}; SameSite=None; Secure;`;
+                //     for dev:           document.cookie = `starredBusses=${starredBussesString}; expires=${expirationDate.toUTCString()}; SameSite=None; Secure; domain=https://bus-dev.redhawks.us/`;
+
                 console.log('starredBusses cookie value:', starredBussesString);
+       
+                    console.log(starredBussesArray)
+            }
+
+            function getStarredBussesArray(starredBussesString) {
+                 // Parse the JSON string to convert it back to an array
             }
             
+            
             function updateStarredUI() {
-                const starredButtons = document.querySelectorAll('.starring');
-                starredButtons.forEach(button => {
-                    const row = button.closest('tr');
-                    const busId = parseInt(row.cells[0].textContent.trim(), 10);
-                    if (starredBusses.has(busId)) {
-                        button.style.backgroundColor = 'yellow';
-                        button.style.border = '2px solid black';
-                    } else {
-                        button.style.backgroundColor = 'white';
-                        button.style.border = '1px solid black';
-                    }
-                });
+                
+
+
+
+
+                const row1 = clickedButton.parentNode.parentNode; // Get the row associated with the clicked button
+                    var element = row1.cells[4].querySelector('span.starring');
+                    
+                    element.style.backgroundColor = 'yellow';
+                    element.style.border = '2px solid black';
+                    
+
+
+                    var table = document.createElement('table');
+                            table.setAttribute('id', 'myTable'); // Set an ID for the table
+                        fetch('/getbus')
+                        .then(response => { 
+                            if(response.ok) {
+                                return response.json(); // not important
+                            }
+                        }).then(data => {
+                            if(data) {
+
+                                let i = 0;
+            
+                        
+                                let busses = data.buslist;
+                                let table = document.getElementById('busTable');
+                                let item = document.getElementById('star-selector');
+                                
+
+            
+
+                                while(i < busses.length) { // busses[i]
+                                    let row = table.rows[i];
+                                    var initelement = row.cells[0]
+                                    var intValue = parseInt(initelement.textContent.trim(), 10);
+                                    
+                                    if(starredBussesString.has(intValue)){
+                                        table.insertBefore(row, table.firstChild.nextSibling);
+
+                                        console.log('lol')
+                                    }
+                                    
+                                 }
+                        }});
             }
+
+
+
+            
             
             
                         function makeTable() {
@@ -361,7 +523,7 @@
                         });
                     }
                     </script> 
-        <table id="busTable">
+        <table id="busTable"  class="bus-table">
             <tr>
                 <th>Bus Number</th> 
                 <th>Bus Changes</th>
@@ -412,7 +574,7 @@
                     let check = false;
                     let v = 0;
                     
-                    while(!check && v< table.rows.length) { // busses[i]{
+                    while(!check && v < table.rows.length) { // busses[i]{
                         
                         if(table.rows[v] == null){
                             var initelement1 = null;
