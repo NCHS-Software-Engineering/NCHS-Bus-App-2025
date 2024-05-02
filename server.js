@@ -2,7 +2,7 @@
 var express = require("express");
 const ejs = require("ejs");
 
-const AWS = require('aws-sdk');
+require('dotenv').config();
 
 AWS.config.update({
   region: 'us-east-1',
@@ -31,6 +31,70 @@ app.use(
   })
 );
 const fs = require("fs");
+
+//data base stuff pull at beginning
+const mysql = require('mysql');
+const connection = mysql.createConnection({
+  host: 'db.redhawks.us',
+  user: 'redhawks_bus',
+  password: 'cZiHGFRBkxRYM4fGfWeN',
+  database: 'redhawks_bus'
+});
+
+connection.connect((err) => {
+  if (err) {
+    console.error('Error connecting to database.', err);
+    return;
+  }
+  console.log('Connected to the database.');
+
+  //SQL query to select all rows from the table
+  const sqlQuery = 'SELECT * FROM Bus_Dev ORDER BY Bus_Number';
+
+  //Execute query
+  connection.query(sqlQuery,(queryErr,results) =>{
+    if(queryErr){
+      console.error('Error executing query:',queryErr);
+      connection.end(); //close connection
+      return;
+    }
+
+    //array to store JSON objects
+    let fullList = {buslist: []};
+    const busData = [];
+
+    //loop through results
+    for (const row of results) {
+      const jsonObject = {
+        number: row.Bus_Number,
+        status: "Not Arrived",
+        change: null,
+        timestamp: null
+      };
+
+      //add JSON object to array
+      fullList.buslist.push(jsonObject);
+    }
+
+    //convert array to JSON string
+    const jsonString = JSON.stringify(fullList,null,2);
+
+    //write json data to file
+    fs.writeFile('buslist.json',jsonString,(writeErr)=>{
+      if(writeErr){
+        console.error('Error writing ot file:',writeErr);
+      } else{
+        console.log('Data has been written to buslist.json');
+      }
+
+      //close database connection
+      connection.end();
+    })
+  })
+})
+
+//database stuff end
+
 const { ok } = require("assert");
 
 var crypto = require('crypto');
@@ -153,9 +217,7 @@ app.get("/logs", function (req, res) {
 });
 
 app.get("/settings", function (req, res) {
-  if (verifyToken(req, res))
   res.render("pages/settings");
-  else res.redirect('/');
 });
 
 app.get("/getemails", (req, res) => {
@@ -236,8 +298,39 @@ app.post("/addbus", (req, res) => {
 
     fs.writeFile("buslist.json", final, (err) => {});
 
+    //add to database
+    const connection = mysql.createConnection({
+      host: 'db.redhawks.us',
+      user: 'redhawks_bus',
+      password: 'cZiHGFRBkxRYM4fGfWeN',
+      database: 'redhawks_bus'
+    });
+    
+    connection.connect((err) => {
+      if (err) {
+        console.error('Error connecting to database.', err);
+        return;
+      }
+      console.log('Connected to the database.');
+    
+      //SQL query to select all rows from the table
+      const sqlQuery = 'INSERT INTO Bus_Dev(Bus_Number) VALUES('+busNum+')';
+    
+      //Execute query
+      connection.query(sqlQuery,(queryErr,results) =>{
+        if(queryErr){
+          console.error('Error executing query:',queryErr);
+          connection.end(); //close connection
+          return;
+        }
+    
+          //close database connection
+          connection.end();
+      })
+    })
+
     res.redirect("settings");
-  });
+  })
 });
 app.get("/getbus", (req, res) => {
   let datajson = fs.readFileSync("buslist.json");
@@ -273,6 +366,38 @@ app.post("/delbus", (req, res) => {
 
     fs.writeFile("buslist.json", final, (err) => {});
   });
+
+  //remove to database
+  const connection = mysql.createConnection({
+    host: 'db.redhawks.us',
+    user: 'redhawks_bus',
+    password: 'cZiHGFRBkxRYM4fGfWeN',
+    database: 'redhawks_bus'
+  });
+
+  connection.connect((err) => {
+    if (err) {
+      console.error('Error connecting to database.', err);
+      return;
+    }
+    console.log('Connected to the database.');
+  
+    //SQL query to select all rows from the table
+    const sqlQuery = 'DELETE FROM Bus_Dev WHERE Bus_Number = '+req.body.busnum+';';
+  
+    //Execute query
+    connection.query(sqlQuery,(queryErr,results) =>{
+      if(queryErr){
+        console.error('Error executing query:',queryErr);
+        connection.end(); //close connection
+        return;
+      }
+  
+        //close database connection
+        connection.end();
+    })
+  })
+
   res.redirect("settings");
 });
 app.get('/login', (req, res) => {
