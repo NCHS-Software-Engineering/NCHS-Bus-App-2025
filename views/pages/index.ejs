@@ -219,6 +219,7 @@
                                 for(var v = starredBussesArray.length - 1; v>=0; v--){
                           while(i < busses.length) { // busses[i]
                             let row = table.rows[i];
+                            const table = row.parentNode;
                                     var initelement = row.cells[0]
                                     var intValue = parseInt(initelement.textContent.trim(), 10);
 
@@ -408,7 +409,7 @@
                                     var intValue = parseInt(initelement.textContent.trim(), 10);
                                     
                                     if(starredBussesString.has(intValue)){
-                                        table.insertBefore(row, table.firstChild.nextSibling);
+                                        table.insertAdjacentElement(row, table.firstChild.nextSibling);
 
                                         console.log('lol')
                                     }
@@ -524,12 +525,12 @@
                     }
                     </script> 
         <table id="busTable"  class="bus-table">
-            <tr>
-                <th>Bus Number</th> 
-                <th>Bus Changes</th>
-                <th>Current Status</th>
-                <th>Time</th>
-                <th></th>
+            <tr>       
+                 <th>Bus Number</th> 
+                 <th>Bus Changes</th>
+                 <th>Current Status</th>
+                 <th>Time</th>
+                 <th></th>
             </tr>
 
         </table>
