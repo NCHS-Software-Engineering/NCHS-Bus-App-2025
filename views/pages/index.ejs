@@ -216,6 +216,7 @@
                                 let item = document.getElementById('star-selector');
                             table.setAttribute('id', 'myTable'); // Set an ID for the table
                                 console.log(busses.length)
+                                console.log(starredBussesArray.length)
                                 for(var v = starredBussesArray.length - 1; v>=0; v--){
                           while(i < busses.length) { // busses[i]
                             let row = table.rows[i];
@@ -224,6 +225,9 @@
                                     var intValue = parseInt(initelement.textContent.trim(), 10);
 
                                     if(intValue == starredBussesArray[v]){
+                                        const table = row.parentNode.parentNode;
+                                        console.log(table)
+                                        console.log(starredBussesArray[v])
                                         starredBusses.add(starredBussesArray[v])
                                         starredBussesArray.pop();
 
@@ -232,12 +236,15 @@
                                         element.style.backgroundColor = 'yellow';
                                         element.style.border = '2px solid black';
                                         
-                                        table.insertBefore(row, table.firstChild.nextSibling);
+                                        //table.insertBefore(row, row.firstChild);
+                                        let tbody = table.querySelector('tbody');
+                            tbody.insertBefore(row, tbody.children[1]);
 
 
                                     }
                                     i++;
                             }
+                            i = 1;
                                 }
 
 
@@ -549,10 +556,13 @@
                 findHighest();
                 const buttons = document.querySelectorAll('.starring');
                 const clickedButton = event.target;
+                console.log(clickedButton)
                 const row = clickedButton.parentNode.parentNode; // Get the row associated with the clicked button
+                console.log(row)
                 var initelement = row.cells[0]
                 var intValue = parseInt(initelement.textContent.trim(), 10);
                 const table = row.parentNode; // Get the table element
+                console.log(table)
 
 
 
