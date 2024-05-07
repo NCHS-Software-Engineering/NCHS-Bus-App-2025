@@ -189,6 +189,7 @@
 
         <script>
               document.addEventListener('DOMContentLoaded', function() {
+
                 
                 // Check if cookies exist
                 const starredBussesString = getCookie('starredBusses');
@@ -218,7 +219,7 @@
                                 console.log(busses.length)
                                 console.log(starredBussesArray.length)
                                 for(var v = starredBussesArray.length - 1; v>=0; v--){
-                          while(i < busses.length) { // busses[i]
+                          while(i < busses.length + 1) { // busses[i]
                             let row = table.rows[i];
                                     var initelement = row.cells[0]
                                     var intValue = parseInt(initelement.textContent.trim(), 10);
@@ -553,6 +554,7 @@
             function starred(){ //add isStarred
                 findSmallest();
                 findHighest();
+                console.log(starredBusses)
                 const buttons = document.querySelectorAll('.starring');
                 const clickedButton = event.target;
                 console.log(clickedButton)
