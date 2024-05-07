@@ -70,7 +70,7 @@ connection.connect((err) => {
         number: row.Bus_Number,
         status: "Not Arrived",
         change: null,
-        timestamp: null
+        timestamp: null   
       };
 
       //add JSON object to array
