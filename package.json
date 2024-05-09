@@ -98,6 +98,7 @@
     "uglify-to-browserify": "^1.0.2",
     "unpipe": "^1.0.0",
     "utils-merge": "^1.0.1",
+    "vapid": "^0.7.4",
     "vary": "^1.1.2",
     "void-elements": "^2.0.1",
     "web-push": "^3.6.7",

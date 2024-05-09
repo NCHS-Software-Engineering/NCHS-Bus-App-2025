@@ -229,6 +229,7 @@
                                         console.log(table)
                                         console.log(starredBussesArray[v])
                                         starredBusses.add(starredBussesArray[v])
+                                        console.log(starredBusses);
                                         starredBussesArray.pop();
 
                                         var element = row.cells[4].querySelector('span.starring');
@@ -563,7 +564,7 @@
                 var initelement = row.cells[0]
                 var intValue = parseInt(initelement.textContent.trim(), 10);
                 const table = row.parentNode; // Get the table element
-                console.log(table)
+                console.log(intValue)
 
 
 
@@ -597,13 +598,14 @@
                         }
                     
                         
-                    
-
-                        
-                        
                         
 
-                        if(intValue === smallestBus){
+                        
+                        
+                        findSmallest();
+                        findHighest();
+                        console.log(smallestBus)
+                        if(intValue === findSmallest()){
                             check = true;
                         }else if(intValue === highestBus){
                             check = true;
