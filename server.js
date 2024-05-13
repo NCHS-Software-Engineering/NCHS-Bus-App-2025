@@ -187,7 +187,6 @@ app.get("/reset", (req, res) => {
 });
 
 app.get("/buslist", function (req, res) {
-  if (verifyToken(req, res)) {
     /*
     const f = require("fs");
     const readline = require("readline");
@@ -199,16 +198,10 @@ app.get("/buslist", function (req, res) {
       res.send;
     }); */
     res.render("pages/buslist");
-  }
-  else {
-    res.redirect('/')
-  }
 });
 
 app.get("/buschanges", function (req, res) {
-  if (verifyToken(req, res)) 
   res.render("pages/buschanges");
-  else res.redirect('/');
 });
 
 app.get("/logs", function (req, res) {
