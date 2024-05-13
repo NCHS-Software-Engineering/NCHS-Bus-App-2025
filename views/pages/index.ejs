@@ -189,7 +189,7 @@
 
         <script>
               document.addEventListener('DOMContentLoaded', function() {
-
+                //let starredBusses = [];
                 
                 // Check if cookies exist
                 const starredBussesString = getCookie('starredBusses');
@@ -209,8 +209,8 @@
                             }
                         }).then(data => {
                             if(data) {
+                                console.log(findSmallest())
                                 
-                             makeTable()
                                 let i = 1;
                                 let busses = data.buslist;
                                 let table = document.getElementById('busTable');
@@ -220,6 +220,10 @@
                                 console.log(starredBussesArray.length)
                                 for(var v = starredBussesArray.length - 1; v>=0; v--){
                           while(i < busses.length + 1) { // busses[i]
+
+                            smallestBus = data.buslist[0].number;
+                            highestBus = data.buslist[busses.length - 1].number
+                        
                             let row = table.rows[i];
                                     var initelement = row.cells[0]
                                     var intValue = parseInt(initelement.textContent.trim(), 10);
@@ -229,6 +233,7 @@
                                         console.log(table)
                                         console.log(starredBussesArray[v])
                                         starredBusses.add(starredBussesArray[v])
+                                        console.log(starredBusses);
                                         starredBussesArray.pop();
 
                                         var element = row.cells[4].querySelector('span.starring');
@@ -430,61 +435,61 @@
             
             
             
-                        function makeTable() {
-            
-                            var table = document.createElement('table');
-                            table.setAttribute('id', 'myTable'); // Set an ID for the table
-                        fetch('/getbus')
-                        .then(response => { 
-                            if(response.ok) {
-                                return response.json(); // not important
-                            }
-                        }).then(data => {
-                            if(data) { // if there is data
-                                let i = 0;
-            
-                        
-                                let busses = data.buslist;
-                                let table = document.getElementById('busTable');
-                                let item = document.getElementById('star-selector');
-                                
-            
-                                
-            
-                                while(i < busses.length) { // busses[i]
-                                    let row = table.insertRow(-1);
-                                 
-                                    row.insertCell(0).innerHTML = busses[i].number;
-                                    row.insertCell(1).innerHTML = busses[i].change;
-                                    row.insertCell(2).innerHTML = busses[i].status;
-                                    row.insertCell(3).innerHTML = busses[i].timestamp;
-                                    row.insertCell(4).innerHTML = "<span id = 'star-selector' class='e-icons e-medium e-star-filled starring'></span>";
-                                    
-            
-            
-            
-                                   
-            
-            
-                                    row.addEventListener('click', function(event){
-            
-                                        starred();
-                                    });
-            
-            
-                                    i++;
-            
-            
-                               
-                                    
-                                }
-            
-                                
-                            }
-                        });
-            
-                        
-                    }
+            function makeTable() {
+
+var table = document.createElement('table');
+table.setAttribute('id', 'myTable'); // Set an ID for the table
+fetch('/getbus')
+.then(response => { 
+if(response.ok) {
+    return response.json(); // not important
+}
+}).then(data => {
+if(data) { // if there is data
+    let i = 0;
+
+
+    let busses = data.buslist;
+    let table = document.getElementById('busTable');
+    let item = document.getElementById('star-selector');
+    
+
+    
+
+    while(i < busses.length) { // busses[i]
+        let row = table.insertRow(-1);
+     
+        row.insertCell(0).innerHTML = busses[i].number;
+        row.insertCell(1).innerHTML = busses[i].change;
+        row.insertCell(2).innerHTML = busses[i].status;
+        row.insertCell(3).innerHTML = busses[i].timestamp;
+        row.insertCell(4).innerHTML = "<span id = 'star-selector' class='e-icons e-medium e-star-filled starring'></span>";
+        
+
+
+
+       
+
+
+        row.addEventListener('click', function(event){
+
+            starred();
+        });
+
+
+        i++;
+
+
+   
+        
+    }
+
+    
+}
+});
+
+
+}
             
                    
             
@@ -554,7 +559,7 @@
             function starred(){ //add isStarred
                 findSmallest();
                 findHighest();
-                console.log(starredBusses)
+                console.log(starredBusses + "**************")
                 const buttons = document.querySelectorAll('.starring');
                 const clickedButton = event.target;
                 console.log(clickedButton)
@@ -563,7 +568,7 @@
                 var initelement = row.cells[0]
                 var intValue = parseInt(initelement.textContent.trim(), 10);
                 const table = row.parentNode; // Get the table element
-                console.log(table)
+                console.log(intValue)
 
 
 
@@ -596,13 +601,11 @@
                             var intValue1 = parseInt(initelement1.textContent.trim(), 10);
                         }
                     
+                        findSmallest()
                         
-                    
-
+                        console.log(intValue1)
+                        console.log(smallestBus)
                         
-                        
-                        
-
                         if(intValue === smallestBus){
                             check = true;
                         }else if(intValue === highestBus){
