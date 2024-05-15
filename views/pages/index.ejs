@@ -535,7 +535,7 @@ if(data) { // if there is data
                             }
                         });
                     }
-                    </script> 
+                    </script>
         <table id="busTable"  class="bus-table">
             <tr>
                 <th>Bus Number</th> 
@@ -618,7 +618,11 @@ if(data) { // if there is data
                             if(intValue1 < intValue && intValue < intValue2){
                                 check = true;
                                 console.log(intValue1);
-                            }
+                            }else{
+                            check = true;
+                            noOtherStars = true;
+                        }// CASE SHOULD BE SET AFTER FIXING CURRENT STARRING ISSUE
+                      //  v++;
                             
                         }
                         v++;
@@ -661,8 +665,13 @@ if(data) { // if there is data
             
         }
             }
+
         
-            
+            /*/*else{
+                            check = true;
+                            noOtherStars = true;
+                        } CASE SHOULD BE SET AFTER FIXING CURRENT STARRING ISSUE*/
+                      //  v++;
             
             function getRandomInt(max) {
                 return Math.floor(Math.random() * max);
