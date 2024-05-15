@@ -164,7 +164,7 @@
                 <img src="/images/Naperville_Central_Logo.png" alt="NCHS Logo" style="width: 80px;">
             </a>
             <h1>NCHS Bus Status Page</h1>
-            <ul class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto">
                 <div id="g_id_onload"
                     data-client_id="308823207677-dkd9nueo76b5d7n0bfptto9te13ismte.apps.googleusercontent.com"
                     data-context="signin"
@@ -182,7 +182,7 @@
                     data-logo_alignment="left"
                     style="margin-right: 10px;">
                 </div>
-            </ul>
+            </div>
         </nav>
         <div id="returntohome" style="position:absolute; top: 35px; height: 116px; width:50%; cursor: pointer;" onclick="location.href='/'"></div>
 
@@ -508,7 +508,7 @@ if(data) { // if there is data
                                 
             
                                 while(i < busses.length) { // busses[i]
-                                    
+                                    console.log(i)
                                     let row = table.rows[i];
                                     row.cells[0].innerHTML = busses[i-1].number;
                                     row.cells[1].innerHTML = busses[i-1].change;
@@ -610,7 +610,7 @@ if(data) { // if there is data
                             check = true;
                         }else if(intValue === highestBus){
                             check = true;
-                        }else if(!(starredBusses.has(intValue1))){
+                        }else if(!(starredBusses.has(intValue1)) && !( isNaN( rowint1.cells[0]) )){
                             let rowint1 = table.rows[v+1]; 
                             var initelement2 = rowint1.cells[0];
                             var intValue2 = parseInt(initelement2.textContent.trim(), 10);
@@ -618,13 +618,13 @@ if(data) { // if there is data
                             if(intValue1 < intValue && intValue < intValue2){
                                 check = true;
                                 console.log(intValue1);
-                            }else{
-                            check = true;
-                            noOtherStars = true;
-                        }// CASE SHOULD BE SET AFTER FIXING CURRENT STARRING ISSUE
+                            }
                       //  v++;
                             
-                        }
+                        }else{
+                            check =  true;
+                            noOtherStars = true;
+                        }// CASE SHOULD BE SET AFTER FIXING CURRENT STARRING ISSUE
                         v++;
 
                     }
