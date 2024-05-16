@@ -491,6 +491,7 @@ if(data) { // if there is data
                 var intValue = parseInt(initelement.textContent.trim(), 10);
                 const table = row.parentNode; // Get the table element
                 console.log(intValue)
+                let noOtherStars = false;
 
 
 
@@ -521,18 +522,22 @@ if(data) { // if there is data
                             let rowint = table.rows[v]; 
                             var initelement1 = rowint.cells[0];
                             var intValue1 = parseInt(initelement1.textContent.trim(), 10);
+                            console.log("(((((((((" + intValue1)
                         }
                     
                         findSmallest()
                         
                         console.log(intValue1)
+                        console.log(intValue)
                         console.log(smallestBus)
-                        
+                        console.log( parseInt(table.rows[v+1].cells[0].textContent.trim(), 10)) // === undefined)
+
                         if(intValue === smallestBus){
                             check = true;
                         }else if(intValue === highestBus){
                             check = true;
-                        }else if(!(starredBusses.has(intValue1)) && !( isNaN( rowint1.cells[0]) )){
+                        }else if(!(starredBusses.has(intValue1)) || isNaN(parseInt(table.rows[v+1].cells[0].textContent.trim(), 10))){
+                           console.log(parseInt(table.rows[v+1].cells[0].textContent.trim(), 10))
                             let rowint1 = table.rows[v+1]; 
                             var initelement2 = rowint1.cells[0];
                             var intValue2 = parseInt(initelement2.textContent.trim(), 10);
@@ -546,15 +551,20 @@ if(data) { // if there is data
                         }else{
                             check =  true;
                             noOtherStars = true;
+
+                        
+
+
                         }// CASE SHOULD BE SET AFTER FIXING CURRENT STARRING ISSUE
                         v++;
 
                     }
 
+                    
 
-
-                    const rowReference = table.rows[v];
-                    console.log(rowReference)
+                        const rowReference = table.rows[v];
+                        console.log(rowReference)
+                    
                     
 
 
@@ -563,7 +573,7 @@ if(data) { // if there is data
                     console.log()
                     //table.insertBefore(row, rowReference.nextSibling);
             
-                    if(intValue == highestBus){
+                    if(noOtherStars||intValue == highestBus){
                         table.appendChild(row);
                     }else{
                         rowReference.insertAdjacentElement('beforebegin', row);
