@@ -501,6 +501,20 @@ if(data) { // if there is data
 
                 if(!(starredBusses.has(intValue))){
                     starredBusses.add(intValue);
+                    //Vinay is here!!
+                    fetch('/getbus')
+                        .then(response => { 
+                        if(response.ok) {
+                            return response.json(); // not important
+                        }
+                        }).then(data => {
+
+                            if(starredBusses.size == data.buslist.length){
+                                document.querySelector('h1').textContent = "Is Starring Done?";
+                            }
+                        })
+
+
                     updateCookie();
                     const row1 = clickedButton.parentNode.parentNode; // Get the row associated with the clicked button
                     var element = row1.cells[4].querySelector('span.starring');
