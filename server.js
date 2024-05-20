@@ -108,8 +108,13 @@ function verifyToken(req, res) {
 
 //will need to fix later
 app.get("/reset", (req, res) => {
+  if (verifyToken(req, res)){
     reset(true);
     res.render("pages/buslist");
+  }
+  else{
+    res.redirect('/');
+  }
 });
 
 app.get("/buslist", function (req, res) {
