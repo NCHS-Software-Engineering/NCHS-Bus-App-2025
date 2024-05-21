@@ -46,3 +46,52 @@ Tutorial: https://www.w3schools.com/js/default.asp
 
 Ejs
 A form of html that allows javascript to be run during the creation of the html. The official documentation: https://ejs.co/
+
+#### Starring
+Here’s the different parts
+- The “DOMContentLoaded” which loads the cookies and the stars before the page 
+- There's the functions for the cookies which creates the cookies and sets it up to work with starring
+- For the starring function itself I know it's a little long but it's a continuation of the code from the past in getting the data but from there there's starred busses which is created at the beggining of the general script and then it checks for starred and unstarred busses and the different classes for starred and unstarred busses. 
+
+#### Some buggy stuff
+- Server crashes
+    - We believe server crashes are most often caused by the overuse of the bandwidth of 1 Gigabyte that is given to the bus app aws server. Currently the refresh rate for clients to pull information from the server is 15 seconds which was changed from the original 5 seconds. The admin side refreshes extremely quickly, more like every 0.5 or 1 second. There are roughly 2000 students that use the app each day for roughly 20-30 minutes each and every 15 seconds pull information from the server containing about 100 bytes of data. There are usually 20 school days in a month. Thus, 2000 students * 20 days * 20min * 4 times per minute for 15 seconds refresh rate * 100 bytes of data = 320 Megabytes of info per month. This does not account for students that constantly refresh the page.
+- Admin ipad breaks
+    - Check for the following:
+        - Using D203 wifi (not the Guest D203 wifi)
+        - Ipads have the newest IOS update
+- Admin changes to settings not kept
+    - Currently, the server resets each day by pulling the github repository when it restarts. Thus, if a change is made to the server, that change is not reflected in the repository, and will not be saved the next day or whenever the server restarts.
+        - Temporary fix: If they need to add/remove bus, add/remove emails from whitelist, or anything else in the settings page, you will have to make the change and push it to the github repo.
+        - Future fix: Go to “Implementing a database” in this readme file.
+
+#### The following are things some future developer can/should implement in starting with most to least importance and increasing difficulty
+## .env file
+- Currently there is an env file that contains sensitive keys for the aws server, they were originally going to be used for notifications but is no longer necessary if using web-push. Instead, the vapid keys, google oauth client id, and database user/password should be put in there, and the env file would have to added to the aws server separately via like USB drive or something
+
+## Implementing a database
+- As described earlier, the admins’ changes to settings on the app such as adding emails to the whitelist or adding/deleting buses wouldn’t be saved because the aws server pulls the code from the github repository and not the other way around, so changes to the running server wouldn’t be saved on the github and when the server restarts and pulls the code from the github again, the changes are not kept
+- The most straightforward solution would be to hold the information from a database, and when the server restarts, pull the information from the database, and when changes are made, reflect those changes in the database as well as the running server files.
+- For example, the list of buses are held in the buslist.json file, and so in the database, there’s a table of just bus numbers, and when the server starts, it pulls all the bus numbers from the server and puts it in the buslist.json file. Then, if an admin adds or removes a bus, add/remove in the bustlist.json file AND add/remove from the database. Thus the changes are kept every time the server restarts.
+- This should be applied for the buslist and whitelist
+    - This is roughly applied for the buslist in the trying-something-diff-2 branch of the development server github repo, however when tested on the main of the dev server, caused it to crash and unknown why, someone else can try implementing their own version or use the current code to build off of it.
+
+## Notifications
+- Rough prototype in “trying something diff2” branch of development server repository
+- Uses web-push library of nodejs
+- How it works generally:
+    - In the index.ejs file, there exists a button that says “subscribe to notifications,” pressing it will call a function subscribe in index.ejs and send info to the server.js function subscribe. In the server.js, the subscription endpoint will be stored in a database along with the number 3, which is the bus number. In addition, it will use the service worker to send a notification at this time. Now when a bus status update is made to bus 3, the server will grab all subscription endpoints that have attribute bus number 3 from the database and send a notification to those devices. Also something something vapid keys it needs an email for some reason prob replace the email with one of yours because my email by then would have expired, also you might need to change the vapid keys once in a while.
+
+## GPS
+- Here are the two tutorials I followed to set up the Raspberry Pi which also include all the instructions of how to configure the Pi properly to function as a GPS
+    - Connecting GPS module to the Pi: https://sparklers-the-makers.github.io/blog/robotics/use-neo-6m-module-with-raspberry-pi/
+    - Creating real time GPS with the Pi and module: https://sparklers-the-makers.github.io/blog/robotics/realtime-gps-tracker-with-raspberry-pi/
+- Here is the link to the gps module that was bought off of Amazon: https://www.amazon.com/Microcontroller-Compatible-Sensitivity-Navigation-Positioning/dp/B07P8YMVNT/ref=sr_1_5?dib=eyJ2IjoiMSJ9.5NFiPGTIPD7CER9_21znC_OYP-yW9ut2BbUaQ-pBU34a9wy-N-ss1hz-hLKAMlhg3JE_YAIyHrVQB3uQOvRj7EV0wTqnBOBIcmXXeEJTw0X5V_FkSR3jnrAxUqZti7iOZT50OsY39aA1TU8eC9Evf1bPZMyirIkg7pSj3t2McKLE8cCZgNhWs5MHrOw-FN6TjCLakKH-XGQaQUUiF7VTxjxAk2DQxImYbhw4sHMMS2c.AX4M4rgP_qPA29CWWJHp_hOwgeXmGF3_9z35Qq6bQos&dib_tag=se&keywords=GPS%2BNEO-6m&qid=1710357200&sr=8-5&th=1
+- The current plan for the Pi’s is to set them up on school buses once they have been proved to work and display the gps data to students so they can know where their bus is
+- The current proof of concept Raspberry Pi that Dr. Miller should have has already followed all the instructions in the tutorial I used and has all the code written on it
+- The API keys for both PubNub and Google Cloud Services are still needed to get the tracking fully functional
+- Right now the Raspberry Pi does properly pull latitude and longitude data, however the API keys are needed to display this information on a website
+- The gps module attached to the Pi can struggle to properly connect, particularly on cloudy days but the closer you get to being outside the more quickly it connects
+- A power bank of some kind will likely be needed along with the Pi’s unless our school buses have power outlets in them
+- May want students to have to sign into their google account to access the bus tracking data for security reasons
+- If implementation goes well, this could be brought to the entire district 203 for implementation at other schools
