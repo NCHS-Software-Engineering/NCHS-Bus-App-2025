@@ -444,7 +444,7 @@ app.post('/auth', (req, res) => {
   const {OAuth2Client} = require('google-auth-library');
   const client = new OAuth2Client(CLIENT_ID);
   async function verify() {
-    var shasum = crypto.createHash('sha1')
+    var shasum = crypto.createHash('sha1');
     const ticket = await client.verifyIdToken({
         idToken: token,
         audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
