@@ -440,9 +440,10 @@ app.get("/getlogs", (req, res) => {
 
 app.post('/auth', (req, res) => {
   const token = req.body.credential;
-  const CLIENT_ID = "442103711074-9jiakb0h9okfqia38vnvmdhaq7ej9rdk.apps.googleusercontent.com";
+  const CLIENT_ID = "790808137804-5os0c3tvpvlc3jk5lnid1fla44e9qd0k.apps.googleusercontent.com";
   const {OAuth2Client} = require('google-auth-library');
   const client = new OAuth2Client(CLIENT_ID);
+
   async function verify() {
     var shasum = crypto.createHash('sha1');
     const ticket = await client.verifyIdToken({
@@ -455,6 +456,7 @@ app.post('/auth', (req, res) => {
     const userid = payload['sub'];
     // If request specified a G Suite domain:
     // const domain = payload['hd']; 
+    console.log(payload.email);
     let whitelist = JSON.parse(fs.readFileSync("whitelist.json", "utf-8")).users;
     for (i = 0; i < whitelist.length; i++) {
       if (whitelist[i].toLowerCase() == payload.email.toLowerCase()){
