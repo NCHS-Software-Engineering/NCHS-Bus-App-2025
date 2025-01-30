@@ -42,6 +42,9 @@ function updateBusses() {
     }).catch(err => console.error(err));
 }
 
+//WEBSOCKET
+
+//
 function getBusses() {
     let o = document.getElementsByClassName('busObj');
     for (let i = 0; i < o.length; i++) {

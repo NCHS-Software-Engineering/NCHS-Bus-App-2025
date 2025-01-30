@@ -40,7 +40,7 @@
     "encodeurl": "^1.0.2",
     "escape-html": "^1.0.3",
     "etag": "^1.8.1",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "express-session": "^1.18.0",
     "finalhandler": "^1.1.1",
     "firebase": "^10.13.0",
@@ -49,9 +49,11 @@
     "google-auth-library": "^8.9.0",
     "googleapis": "^111.0.0",
     "graceful-readlink": "^1.0.1",
+    "http": "^0.0.1-security",
     "http-errors": "^1.8.1",
     "iconv-lite": "^0.4.23",
     "inherits": "^2.0.3",
+    "init": "^0.1.2",
     "ipaddr.js": "^1.9.1",
     "is-buffer": "^1.1.6",
     "is-promise": "^2.2.2",
@@ -107,6 +109,7 @@
     "window-size": "^0.1.4",
     "with": "^4.0.3",
     "wordwrap": "^0.0.2",
+    "ws": "^8.18.0",
     "yargs": "^3.32.0"
   },
   "scripts": {
